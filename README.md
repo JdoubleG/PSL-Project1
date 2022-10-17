@@ -87,6 +87,8 @@ System specifications:
 | GPU | AMD Radeon RX 6600, Thunderbolt 3 eGPU |
 | Memory | 16 GB DDR-4 @ 3200 MHz |
 | Storage | Seagate FireCuda 530, PCIe gen. 4 NVMe, 1 TB |
+| OS | Microsoft Windows 11 Education |
+| R Version | 4.2.1 |
 
 
 Elastic Net Hyperparameters:
@@ -121,6 +123,8 @@ The boosting tree method was trained on the following system:
 | Memory | 48 GB DDR-4 @ 2600 MHz |
 | Storage | Samsung 980 Pro, PCIe gen. 3 NVMe, 1 TB |
 | OS | Microsoft Windows 10 Pro |
+| R version | x.x.x |
+^^^ TODO
 
 The xgboost library has many hyperparameters which can be adjusted to improve results.  Only a small subset were actually used in training:
 
