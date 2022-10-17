@@ -28,17 +28,17 @@ The data set was derived from a [Kaggle competition](https://www.kaggle.com/comp
 The data set contains home sales for years 2006 through 2010 with 2930 rows of data across 83 columns with 4 types of data: continuous, discrete, ordinal, and categorical (nominal).  Data was modified to be more suitable towards machine learning as some variables were recorded in a manner which are more convenient for humans than for machines.  This includes eliminating irrelevant data and outliers, converting data to a format suitable for numeric computation,  redefine variable when it was not experessed elegantly, or contained strong correlation to another very similar variable.
 
 ### Repair
-Only one variable (Garage_Yr_Blt) contained missing values.  Inspection of records in the data indicated the homes with the missing values did not have a garage.  Therefore, the missing values were replaced with zeros.
+Only one variable (Garage_Yr_Blt) contained missing values.  Inspection of records in the data indicated the homes with the missing values did not have a garage.  Therefore, the missing values were replaced with zeros, "repairing" the data.
 
 After the data was repaired, a copy was made for each training method employed so data could be further transformed in a manner appropriate for the training method.
 
 ### Dropped Variables
 Several variables demonstrated little or no correlation to Sale_Price of the home, so they were dropped from the model (e.g. Latitude, Longitude, PID, ...)
 
-### Categorical Variables
+### Ordered Categorical Variables
 Categorical variables utilizing levels as a rating system of increasing quality were converted to ordinal variables with integer values.
 
-### Ordinal Variables
+### Unordered Nominal Variables
 Categorical variables utilizing levels of nominal values were converted to distinct binary variables (one-hot encoding) with each binary variable representing one nominal value in the original variable.  For each converted categorical variable, K-1 binary variables were generated where K is the number of levels in the variable when K > 2.
 
 ### Winsor Method
