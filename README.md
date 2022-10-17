@@ -69,11 +69,11 @@ Training was conducted over 10 splits with each split tested over different subs
 3. fit model on the train data
 4. record train predictions
 5. read test data
-6. transform test data to conform to train data design matrix specifications.
-7. perform predictions on test data.
-8. record predictions and write to file.
-9. read predictions from file to compute RMSE.
-10. stop wall clock for the split.
+6. transform test data to conform to train data design matrix specifications
+7. perform predictions on test data
+8. record predictions and write to file
+9. read predictions from file to compute RMSE
+10. stop wall clock for the split
 
 ### __Linear Regression - Elastic Net__:
 
@@ -83,10 +83,10 @@ System specifications:
 |   |    |
 | --- | --- |
 | System | Framework Laptop |
-|	CPU | Intel i7 1260p, 12 cores (16 logical) @ 2.5 GHz |
-| GPU | AMD Radeon RX6600 |
+|	CPU | Intel i7 1260P, 12 cores (16 logical) @ 2.5 GHz |
+| GPU | AMD Radeon RX 6600, Thunderbolt 3 eGPU |
 | Memory | 16 GB DDR-4 @ 3200 MHz |
-| Storage | Seagate Solid State Drive, PCIe x4 NVMe |
+| Storage | Seagate FireCuda 530, PCIe gen. 4 NVMe, 1 TB |
 
 
 Elastic Net Hyperparameters:
@@ -117,9 +117,9 @@ The boosting tree method was trained on the following system:
 | --- | --- |
 | System | Dell Precision Workstation T7820 |
 | CPU | Intel Xeon 6242R Processor, 20 cores (40 logical), 35 MB L2 cache |
-| GPU | NVidia Quadro RTX 4000, PCIe x3, 8 GB GDDR-6 RAM, 2304 CUDA cores |
+| GPU | NVidia Quadro RTX 4000, PCIe gen. 3, 8 GB GDDR-6 RAM, 2304 CUDA cores |
 | Memory | 48 GB DDR-4 @ 2600 MHz |
-| Storage | Samsung 980 Pro, PCIe x3 NVMe, 1 TB |
+| Storage | Samsung 980 Pro, PCIe gen. 3 NVMe, 1 TB |
 | OS | Microsoft Windows 10 Pro |
 
 The xgboost library has many hyperparameters which can be adjusted to improve results.  Only a small subset were actually used in training:
