@@ -6,6 +6,8 @@
 # data frame named "test.y":
 # col 1: PID
 # col 2: Sale_Price
+test.y <- read.csv("test_y.csv")
+# maybe necessary to set column names
 
 pred <- read.csv("mysubmission1.txt")
 names(test.y)[2] <- "True_Sale_Price"

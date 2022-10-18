@@ -1,3 +1,6 @@
+library( ggplot2 )
+library( caret )
+library( tidyverse )
 
 # read data from file
 data    <- read.csv(   "Ames_data.csv"        )
@@ -7,8 +10,8 @@ vNames = names( data )
 sort( names( data ))
 # head( data )
 
-cols = data[ c( "joe", "Alley") ]
-dim( cols )
+#cols = data[ c( "joe", "Alley") ]
+# dim( cols )
 
 
 #============================================================
@@ -84,6 +87,8 @@ to_ordinal <- function( df, varName, lvlNames ) {
   return( df2 )
 }
 
+# Example of Ad hoc conversion to ordinal in case we need it again
+# df = to_ordinal( df, "BsmtFin_Type_1", c( "No_Basement", "Unf", "LwQ", "Rec", "BLQ", "ALQ", "GLQ" ))
 
 
 # pairs( ~ Sale_Price + Bedroom_AbvGr, data=data )
@@ -156,105 +161,121 @@ plot_type = 5
 df = data
 
 # basement finished rating 1
-df = to_ordinal( df, "BsmtFin_Type_1", c( "No_Basement", "Unf", "LwQ", "Rec", "BLQ", "ALQ", "GLQ" ))
+df$BsmtFin_Type_1 <- factor(df$BsmtFin_Type_1, order=TRUE,
+  levels=c( "No_Basement", "Unf", "LwQ", "Rec", "BLQ", "ALQ", "GLQ" ))
 plot_category( plot_type, df, "BsmtFin_Type_1", "Sale_Price" )
 
 # basement finished rating 2
-df = to_ordinal( df, "BsmtFin_Type_2", c( "No_Basement", "Unf", "LwQ", "Rec", "BLQ", "ALQ", "GLQ" ))
+df$BsmtFin_Type_2 <- factor(df$BsmtFin_Type_2, order=TRUE,
+  levels=c( "No_Basement", "Unf", "LwQ", "Rec", "BLQ", "ALQ", "GLQ" ))
 plot_category( plot_type, df, "BsmtFin_Type_2", "Sale_Price" )
 
 # basement condition
-df = to_ordinal( df, "Bsmt_Cond", c( "No_Basement", "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Bsmt_Cond <- factor(df$Bsmt_Cond, order=TRUE,
+  levels=c( "No_Basement", "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Bsmt_Cond", "Sale_Price" )
 
 # basement exposure
-df = to_ordinal( df, "Bsmt_Exposure", c( "No_Basement", "No", "Mn", "Av", "Gd" ))
+df$Bsmt_Exposure <- factor(df$Bsmt_Exposure, order=TRUE,
+  levels=c( "No_Basement", "No", "Mn", "Av", "Gd" ))
 plot_category( plot_type, df, "Bsmt_Exposure", "Sale_Price" )
 
-# basement condition
-df = to_ordinal( df, "Bsmt_Cond", c( "No_Basement", "Poor", "Fair", "Typical", "Good", "Excellent" ))
-plot_category( plot_type, df, "Bsmt_Cond", "Sale_Price" )
-
 # Bsmt_Qual (height of basement)
-df = to_ordinal( df, "Bsmt_Qual", c( "No_Basement", "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Bsmt_Qual <- factor(df$Bsmt_Qual, order=TRUE,
+  levels=c( "No_Basement", "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Bsmt_Qual", "Sale_Price" )
 
 # Central_Air
-df = to_ordinal( df, "Central_Air", c( "N", "Y" ))
+df$Central_Air <- factor(df$Central_Air, order=TRUE, levels=c( "N", "Y" ))
 plot_category( plot_type, df, "Central_Air", "Sale_Price" )
 
 # Electrical
-df = to_ordinal( df, "Electrical", c( "Mix", "FuseP", "FuseF", "FuseA", "SBrkr","Unknown" ))
+df$Electrical <- factor(df$Electrical, order=TRUE,
+  levels=c( "Mix", "FuseP", "FuseF", "FuseA", "SBrkr","Unknown" ))
 plot_category( plot_type, df, "Electrical", "Sale_Price" )
 
 # Exterior Quality
-df = to_ordinal( df, "Exter_Qual", c( "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Exter_Qual <- factor(df$Exter_Qual, order=TRUE,
+  levels=c( "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Exter_Qual", "Sale_Price" )
 
 # Exterior Condition
-df = to_ordinal( df, "Exter_Cond", c( "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Exter_Cond <- factor(df$Exter_Cond, order=TRUE,
+  levels=c( "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Exter_Cond", "Sale_Price" )
 
 # Fence
-df = to_ordinal( df, "Fence", c( "No_Fence", "Minimum_Wood_Wire", "Good_Wood", "Minimum_Privacy", "Good_Privacy" ))
+df$Fence <- factor(df$Fence, order=TRUE,
+  levels=c( "No_Fence", "Minimum_Wood_Wire", "Good_Wood", "Minimum_Privacy", "Good_Privacy" ))
 plot_category( plot_type, df, "Fence", "Sale_Price" )
 
 # Fireplace QU
-df = to_ordinal( df, "Fireplace_Qu", c( "No_Fireplace", "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Fireplace_Qu <- factor(df$Fireplace_Qu, order=TRUE,
+  levels=c( "No_Fireplace", "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Fireplace_Qu", "Sale_Price" )
 
 # Functional
-df = to_ordinal( df, "Functional", c( "Sal", "Sev", "Maj2", "Maj1", "Mod", "Min2", "Min1", "Typ" ))
+df$Functional <- factor(df$Functional, order=TRUE,
+  levels=c( "Sal", "Sev", "Maj2", "Maj1", "Mod", "Min2", "Min1", "Typ" ))
 plot_category( plot_type, df, "Functional", "Sale_Price" )
 
 # Garage Condition
-df = to_ordinal( df, "Garage_Cond", c( "No_Garage", "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Garage_Cond <- factor(df$Garage_Cond, order=TRUE,
+  levels=c( "No_Garage", "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Garage_Cond", "Sale_Price" )
 
 # Garage Finish
-df = to_ordinal( df, "Garage_Finish", c( "No_Garage", "Unf", "RFn", "Fin" ))
+df$Garage_Finish <- factor(df$Garage_Finish, order=TRUE,
+  levels=c( "No_Garage", "Unf", "RFn", "Fin" ))
 plot_category( plot_type, df, "Garage_Finish", "Sale_Price" )
 
 # Garage Quality
-df = to_ordinal( df, "Garage_Qual", c( "No_Garage", "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Garage_Qual <- factor(df$Garage_Qual, order=TRUE,
+  levels=c( "No_Garage", "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Garage_Qual", "Sale_Price" )
 
 # Heating QC
-df = to_ordinal( df, "Heating_QC", c( "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Heating_QC <- factor(df$Heating_QC, order=TRUE,
+  levels=c( "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Heating_QC", "Sale_Price" )
 
 # Kitchen Quality
-df = to_ordinal( df, "Kitchen_Qual", c( "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Kitchen_Qual <- factor(df$Kitchen_Qual, order=TRUE,
+  levels=c( "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Kitchen_Qual", "Sale_Price" )
 
 # Land Slope
-df = to_ordinal( df, "Land_Slope", c( "Gtl", "Mod", "Sev" ))
+df$Land_Slope <- factor(df$Land_Slope, order=TRUE, levels=c( "Gtl", "Mod", "Sev" ))
 plot_category( plot_type, df, "Land_Slope", "Sale_Price" )
 
 # Lot Shape
-df = to_ordinal( df, "Lot_Shape", c( "Irregular", "Moderately_Irregular", "Slightly_Irregular", "Regular" ))
+df$Lot_Shape <- factor(df$Lot_Shape, order=TRUE,
+  levels=c( "Irregular", "Moderately_Irregular", "Slightly_Irregular", "Regular" ))
 plot_category( plot_type, df, "Lot_Shape", "Sale_Price" )
 
 # Overall Condition
-df = to_ordinal( df, "Overall_Cond", 
-      c( "Very_Poor", "Poor", "Fair", "Below_Average", "Average", "Above_Average", "Good", "Very_Good", "Excellent", "Very_Excellent" ))
+df$Overall_Cond <- factor(df$Overall_Cond, order=TRUE,
+  levels=c( "Very_Poor", "Poor", "Fair", "Below_Average", "Average", "Above_Average", "Good", "Very_Good", "Excellent", "Very_Excellent" ))
 plot_category( plot_type, df, "Overall_Cond", "Sale_Price" )
 
 # Overall Quality
-df = to_ordinal( df, "Overall_Qual", 
-      c( "Very_Poor", "Poor", "Fair", "Below_Average", "Average", "Above_Average", "Good", "Very_Good", "Excellent", "Very_Excellent" ))
+df$Overall_Qual <- factor(df$Overall_Qual, order=TRUE,
+  levels=c( "Very_Poor", "Poor", "Fair", "Below_Average", "Average", "Above_Average", "Good", "Very_Good", "Excellent", "Very_Excellent" ))
 plot_category( plot_type, df, "Overall_Qual", "Sale_Price" )
 
 # Paved Drive
-df = to_ordinal( df, "Paved_Drive", c( "Dirt_Gravel", "Partial_Pavement", "Paved" ))
+df$Paved_Drive <- factor(df$Paved_Drive, order=TRUE,
+  levels=c( "Dirt_Gravel", "Partial_Pavement", "Paved" ))
 plot_category( plot_type, df, "Paved_Drive", "Sale_Price" )
 
 # Pool Quality
-df = to_ordinal( df, "Pool_QC", c( "No_Pool", "Poor", "Fair", "Typical", "Good", "Excellent" ))
+df$Pool_QC <- factor(df$Pool_QC, order=TRUE,
+  levels=c( "No_Pool", "Poor", "Fair", "Typical", "Good", "Excellent" ))
 plot_category( plot_type, df, "Pool_QC", "Sale_Price" )
 
 # Utilities
-df = to_ordinal( df, "Utilities", c( "ELO", "NoSeWa", "NoSewr", "AllPub" ))
+df$Utilities <- factor(df$Utilities, order=TRUE,
+  levels=c( "ELO", "NoSeWa", "NoSewr", "AllPub" ))
 plot_category( plot_type, df, "Utilities", "Sale_Price" )
 
 
