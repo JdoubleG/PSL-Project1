@@ -10,6 +10,7 @@ October 17, 2022
 
 James Garijo-Garde (jamesig2):
 - general code stub for training/testing
+- identification of variables to log/winsorize
 - Linear Regression model
 
 Matthew Lind (lind6):
