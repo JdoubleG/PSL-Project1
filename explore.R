@@ -27,7 +27,7 @@ plot_category <- function( plot_type, d, cat_name, y_name, log=FALSE ) {
   dd <- subset( d, select = c( y_name, cat_name ) )
   
   if(log) {
-    yvar = yvar = log(d[[y_name]])
+    yvar = log(d[[y_name]])
   } else {
     yvar = d[[y_name]]
   }
@@ -141,18 +141,18 @@ plot_category( plot_type, data, "Wood_Deck_SF",       "Sale_Price" )
 #===============================================
 plot_type = 1
 plot_category( plot_type, data, "Bedroom_AbvGr",  "Sale_Price" )
-plot_category( plot_type, data, "Bsmt_Full_Bath", "Sale_Price" )
+plot_category( plot_type, data, "Bsmt_Full_Bath", "Sale_Price", log=TRUE )
 plot_category( plot_type, data, "Bsmt_Half_Bath", "Sale_Price" )
 plot_category( plot_type, data, "Fireplaces",     "Sale_Price" )
-plot_category( plot_type, data, "Full_Bath",      "Sale_Price" )
+plot_category( plot_type, data, "Full_Bath",      "Sale_Price", log=TRUE )
 plot_category( plot_type, data, "Garage_Cars",    "Sale_Price" )
-plot_category( plot_type, data, "Garage_Yr_Blt",  "Sale_Price" )
+plot_category( plot_type, data, "Garage_Yr_Blt",  "Sale_Price", log=TRUE )
 plot_category( plot_type, data, "Half_Bath",      "Sale_Price" )  #
 plot_category( plot_type, data, "Kitchen_AbvGr",  "Sale_Price" )  #
 plot_category( plot_type, data, "Mo_Sold",        "Sale_Price" )  #
 plot_category( plot_type, data, "TotRms_AbvGrd",  "Sale_Price" )
-plot_category( plot_type, data, "Year_Built",     "Sale_Price" )
-plot_category( plot_type, data, "Year_Remod_Add", "Sale_Price" )
+plot_category( plot_type, data, "Year_Built",     "Sale_Price", log=TRUE )
+plot_category( plot_type, data, "Year_Remod_Add", "Sale_Price", log=TRUE )
 plot_category( plot_type, data, "Year_Sold",      "Sale_Price" )  #
 
 
@@ -189,7 +189,7 @@ plot_category( plot_type, df, "Bsmt_Exposure", "Sale_Price" )
 # Bsmt_Qual (height of basement)
 df$Bsmt_Qual <- factor(df$Bsmt_Qual, order=TRUE,
   levels=c( "No_Basement", "Poor", "Fair", "Typical", "Good", "Excellent" ))
-plot_category( plot_type, df, "Bsmt_Qual", "Sale_Price" )
+plot_category( plot_type, df, "Bsmt_Qual", "Sale_Price", log=TRUE )
 
 # Central_Air
 df$Central_Air <- factor(df$Central_Air, order=TRUE, levels=c( "N", "Y" ))
@@ -238,7 +238,7 @@ plot_category( plot_type, df, "Garage_Finish", "Sale_Price" )
 # Garage Quality
 df$Garage_Qual <- factor(df$Garage_Qual, order=TRUE,
   levels=c( "No_Garage", "Poor", "Fair", "Typical", "Good", "Excellent" ))
-plot_category( plot_type, df, "Garage_Qual", "Sale_Price" )
+plot_category( plot_type, df, "Garage_Qual", "Sale_Price", log=TRUE )
 
 # Heating QC
 df$Heating_QC <- factor(df$Heating_QC, order=TRUE,
@@ -267,12 +267,12 @@ plot_category( plot_type, df, "Overall_Cond", "Sale_Price" )
 # Overall Quality
 df$Overall_Qual <- factor(df$Overall_Qual, order=TRUE,
   levels=c( "Very_Poor", "Poor", "Fair", "Below_Average", "Average", "Above_Average", "Good", "Very_Good", "Excellent", "Very_Excellent" ))
-plot_category( plot_type, df, "Overall_Qual", "Sale_Price" )
+plot_category( plot_type, df, "Overall_Qual", "Sale_Price", log=TRUE )
 
 # Paved Drive
 df$Paved_Drive <- factor(df$Paved_Drive, order=TRUE,
   levels=c( "Dirt_Gravel", "Partial_Pavement", "Paved" ))
-plot_category( plot_type, df, "Paved_Drive", "Sale_Price" )
+plot_category( plot_type, df, "Paved_Drive", "Sale_Price", log=TRUE )
 
 # Pool Quality
 df$Pool_QC <- factor(df$Pool_QC, order=TRUE,
@@ -311,7 +311,7 @@ plot_category( plot_type, data, "Neighborhood", "Sale_Price" )
 #plot_category( plot_type, data, "Roof_Style", "Sale_Price" )
 plot_category( plot_type, data, "Sale_Condition", "Sale_Price" )
 plot_category( plot_type, data, "Sale_Type", "Sale_Price" )
-#plot_category( plot_type, data, "Street", "Sale_Price" )
+plot_category( plot_type, data, "Street", "Sale_Price" )
 
 
 # numeric
