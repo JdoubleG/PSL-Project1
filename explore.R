@@ -22,29 +22,35 @@ sort( names( data ))
 #  cat_name: categorical variable name
 #    y_name: response variable
 #============================================================
-plot_category <- function( plot_type, d, cat_name, y_name ) {
+plot_category <- function( plot_type, d, cat_name, y_name, log=FALSE ) {
   
   dd <- subset( d, select = c( y_name, cat_name ) )
+  
+  if(log) {
+    yvar = yvar = log(d[[y_name]])
+  } else {
+    yvar = d[[y_name]]
+  }
   
   if ( plot_type == 1 ) {
     
     # scatter plot
     ggplot( dd ) +
-      geom_point( aes( x=d[[cat_name]], y=d[[y_name]], color=d[[cat_name]]), size=2 ) +
+      geom_point( aes( x=d[[cat_name]], y=yvar, color=d[[cat_name]]), size=2 ) +
       labs( x=cat_name, y="Sale Price", color=cat_name )
     
   } else if ( plot_type == 2 ) {
     
     # histogram
     ggplot( dd ) +
-      geom_histogram( bins=100, aes( x=d[[y_name]], fill=d[[cat_name]] ), color = 'lightblue' ) +
+      geom_histogram( bins=100, aes( x=yvar, fill=d[[cat_name]] ), color = 'lightblue' ) +
       labs( x = y_name )
     
   } else if ( plot_type == 3 ) {
     
     # density plot
     ggplot( dd ) +
-      geom_density( aes( x = d[[y_name]], fill = d[[cat_name]], alpha=0.35 ) ) +
+      geom_density( aes( x = yvar, fill = d[[cat_name]], alpha=0.35 ) ) +
       labs( x = y_name, color=dd[[cat_name]] )
     
   } else if ( plot_type == 4 ) { 
@@ -58,7 +64,7 @@ plot_category <- function( plot_type, d, cat_name, y_name ) {
     
     # box plot
     ggplot( dd ) +
-      geom_boxplot( aes( x = d[[cat_name]], y = d[[y_name]], fill = d[[cat_name]] )) + 
+      geom_boxplot( aes( x = d[[cat_name]], y = yvar, fill = d[[cat_name]] )) + 
       labs( x = cat_name, y = y_name )
   }
 }
@@ -114,18 +120,18 @@ plot_category( plot_type, data, "BsmtFin_SF_2",       "Sale_Price" )
 plot_category( plot_type, data, "Bsmt_Unf_SF",        "Sale_Price" )
 plot_category( plot_type, data, "Enclosed_Porch",     "Sale_Price" )
 plot_category( plot_type, data, "First_Flr_SF",       "Sale_Price" )
-plot_category( plot_type, data, "Garage_Area",        "Sale_Price" )
+plot_category( plot_type, data, "Garage_Area",        "Sale_Price", log=TRUE )
 plot_category( plot_type, data, "Gr_Liv_Area",        "Sale_Price" )
 plot_category( plot_type, data, "Lot_Area",           "Sale_Price" )
-plot_category( plot_type, data, "Lot_Frontage",       "Sale_Price" )
+plot_category( plot_type, data, "Lot_Frontage",       "Sale_Price", log=TRUE )
 plot_category( plot_type, data, "Low_Qual_Fin_SF",    "Sale_Price" )  #
 plot_category( plot_type, data, "Mas_Vnr_Area",       "Sale_Price" )
 plot_category( plot_type, data, "Misc_Val",           "Sale_Price" )  #
-plot_category( plot_type, data, "Open_Porch_SF",      "Sale_Price" )
+plot_category( plot_type, data, "Open_Porch_SF",      "Sale_Price", log=TRUE )
 plot_category( plot_type, data, "Pool_Area",          "Sale_Price" )  #
-plot_category( plot_type, data, "Total_Bsmt_SF",      "Sale_Price" )
-plot_category( plot_type, data, "Screen_Porch",       "Sale_Price" )
-plot_category( plot_type, data, "Second_Flr_SF",      "Sale_Price" )
+plot_category( plot_type, data, "Total_Bsmt_SF",      "Sale_Price", log=TRUE )
+plot_category( plot_type, data, "Screen_Porch",       "Sale_Price", log=TRUE )
+plot_category( plot_type, data, "Second_Flr_SF",      "Sale_Price", log=TRUE )
 plot_category( plot_type, data, "Three_season_porch", "Sale_Price" )  #
 plot_category( plot_type, data, "Wood_Deck_SF",       "Sale_Price" )
 
