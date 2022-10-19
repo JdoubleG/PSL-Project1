@@ -3,18 +3,17 @@
 
 October 17, 2022
 
-
 ## __Team member contributions__:
 
 James Garijo-Garde (jamesig2):
-- general code stub for training/testing
-- identification of variables to log/winsorize
+- General code stub for training/testing
+- Identification of variables to log/winsorize
 - Linear Regression model tuning
-- written report
+- Written report
 
 Matthew Lind (lind6):
-- data cleaning / processing functions
-- written report
+- Implentation of full training/testing code.
+- Support code for plotting/analysis of data
 - Tree model
 
 ## __Introduction__:
@@ -29,14 +28,20 @@ The data set contains home sales for years 2006 through 2010 with 2930 rows of d
 Only one variable (Garage_Yr_Blt) contained missing values.  The missing values were replaced with zeros, "repairing" the data.
 
 ### Dropped Variables
-Several variables demonstrated little or no correlation to Sale_Price of the home, so they were dropped from the model.
+Several variables demonstrated little correlation to Sale_Price of the home:
+- Condition_2, Heating, Latitude, Longitude, Low_Qual_Fin_SF, Misc_Feature, Pool_Area, Pool_QC, Roof_Matl, Street, Utilities
+
+These variables lack range of values to be useful in prediction:
+- Mas_Vnr_Type, Lot_Config, Roof_Style, Pool_Area, Mo_Sold, Year_Sold
+
+These variables exhibited negative or no correlation to Sale_Price prediction:
+- BsmtFin_SF_1, Enclosed_Porch, Kitchen_AbvGr, Misc_Val, BmstFin_SF_2
 
 ### Nominal Variables
 Categorical variables utilizing levels of nominal values were converted to distinct binary variables (one-hot encoding) with each binary variable representing one nominal value in the original variable.  For each converted categorical variable, K-1 binary variables were generated where K is the number of levels in the variable when K > 2.
 
 ### Winsor Method
 Numeric variables demonstrating high correlation to Sale_Price but containing extreme outliers were processed using the winsor method to clamp outliers to specify quantiles.
-
 
 ### Logarithmic Transformation
 We identified several variables with a relationship appearing logarithmic to Sale_Price, however, due to the strong performance of our models before adding the logarithmic transformations, we decided against transforming any data logarithmically.
@@ -63,7 +68,6 @@ System specifications:
 | OS | Microsoft Windows 11 Education |
 | R Version | 4.2.1 |
 
-
 Elastic Net Hyperparameters:
 - __alpha__: 0.5
 - __s__: lambda.min
@@ -85,9 +89,7 @@ Benchmarks:
 
 ### __Boosting Tree using XGBoost__:
 
-XGBoost is a tree based method which can be used for regression utlizing extreme gradients to improve performance.  XGBoost 
-
-The boosting tree method was trained on the following system:
+The XGBoost tree method was trained on the following system:
 
 |  |  |
 | --- | --- |
@@ -97,26 +99,32 @@ The boosting tree method was trained on the following system:
 | Memory | 48 GB DDR-4 @ 2600 MHz |
 | Storage | Samsung 980 Pro, PCIe gen. 3 NVMe, 1 TB |
 | OS | Microsoft Windows 10 Pro |
-| R version | x.x.x |
-^^^ TODO
+| R version | 4.2.1 |
 
 The xgboost library has many hyperparameters which can be adjusted to improve results.  Only a small subset were actually used in training:
-
-- __parameter 1__: explanation 1 ...
-- __parameter 2__: explanation 2 ...
-- __parameter 3__: explanation 3 ... 
+- __eta__: Controls rate of learning and used to control overfitting.  Typical values specified in range [0...1].  Values tested were: 0.01, 0.025, 0.035, 0.1, 0.04, 0.05, 0.065, 0.5 and 1.0.  The best eta was roughly 0.05 - 0.065 depending on the rounds and depth parameters.
+- __rounds__: Maximum number of boosting iterations.  More rounds means more  decision trees are built for boosting, but also more computation resources and time involved.  Values tested were 100, 150, 175, 250, 500, 1000, 1500, 2500, 5000.  The default value was 5000, but lowered by half until a best compromise was reached.  Lower rounds improved execution time greatly but reduced accuracy of prediction.  Best value was approximatley 175.
+- __subsample__: Subsample ratio of the training distance.  Ratio of how many data instances are collected to grow trees to prevent overfitting.  Values tested were: 0.01, 0.1, 0.35, 0.5, 0.65, 0.75, and 1.0.  Best value was 0.5. as both higher and lower values resulting in individual splits exceeding the benchmark while extremely low subsample greatly increased RMSE.
+- __maxdepth__: Maximum depth of the tree.  Lower values resulted faster computation but poorer RMSE.  Higher values slowed execution time, but did not produce significantly better RMSE.  RMSE appeared to peak around value of 9.  Values tested were 1, 3, 6, 9, 12, and 50.  Best value was between 6 and 9.
 
 The training was conducted over 10 splits with the following observed running times and Root Mean Squared Error (RMSE):
 
-| Split | Time | RMSE |
+XGBoost hyperparameters:
+__eta__= 0.05, __rounds__= 1000, __max depth__= 6, __subsample__= 0.5
+
+| Split | Time (s) | RMSE |
 | --- | --- | --- |
-| 1  | 00:01 | 0.123 |
-| 2  | 00:01 | 0.123 |
-| 3  | 00:01 | 0.123 |
-| 4  | 00:01 | 0.123 |
-| 5  | 00:01 | 0.123 |
-| 6  | 00:01 | 0.123 |
-| 7  | 00:01 | 0.123 |
-| 8  | 00:01 | 0.123 |
-| 9  | 00:01 | 0.123 |
-| 10 | 00:01 | 0.123 |
+| 1  | 18.390 | 0.116208689040852 |
+| 2  | 18.590 | 0.119561092066234 |
+| 3  | 18.159 | 0.1135738235704 |
+| 4  | 18.179 | 0.112813233033067 |
+| 5  | 18.329 | 0.110649984301112 |
+| 6  | 18.610 | 0.127159680916838 |
+| 7  | 18.340 | 0.127560377899479 |
+| 8  | 18.360 | 0.126715317877958 |
+| 9  | 18.440 | 0.127017253341482 |
+| 10 | 18.209 | 0.124610717964054 |
+
+## __Comments__
+
+During testing it was noticed custom quantile values for each Winsorized variable did not improve RMSE.  Quantile was set to 0.95 for best results.
