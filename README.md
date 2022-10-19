@@ -6,8 +6,6 @@ October 17, 2022
 
 ## __Team member contributions__:
 
-(__TO DO__: edit into nice prose)
-
 James Garijo-Garde (jamesig2):
 - general code stub for training/testing
 - identification of variables to log/winsorize
@@ -168,6 +166,7 @@ The training was conducted over 10 splits with the following observed running ti
 
 (__TO DO__: Discussion of findings, what worked, what didn't, interesting discoveries along the way (good or bad), etc...)
 
+One interesting discovery was that the logarithm transformation we identified as worth pursuing for several columns was ultimately not necessary to generate predictions with a RSME below the specified threshold. However, _necessary_ is an important word to note: while it's possible the transformation would have indeed reduced the RSME, since we were operating on a deadline, we opted not to consider this possibility. Were we performing a more thorough attempt to predict Sale_Price with infinite time at our disposal, there is no doubt we would have explored this possibility.
 
 
 ### Remarks:
