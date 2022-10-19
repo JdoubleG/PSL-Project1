@@ -11,8 +11,9 @@
 #================================================================
 library( xgboost )
 
-VERBOSE = TRUE
-outFileName = "mysubmission1.txt"
+VERBOSE           = FALSE
+outFileNameLinear = "mysubmission1.txt"
+outFileNameTree   = "mysubmission2.txt"
 
 #--------------------------
 # read data from file
@@ -283,10 +284,12 @@ data_transform <- function( df, qValues, varNamesWinsor ) {
 # compute RMSE
 #=========================================
 get_rmse <- function( fileName ) {
+  
   # evaluate results
   pred               <- read.csv( fileName )
-  names( test.y )[2] <- "True_Sale_Price"
-  pred               <- merge( pred, test.y, by="PID" )
+  test_y             <- read.csv( "test_y.csv" )
+  names( test_y )[2] <- "True_Sale_Price"
+  pred               <- merge( pred, test_y, by="PID" )
   rmse = sqrt( mean( ( log( pred$Sale_Price ) - log( pred$True_Sale_Price) )^2 ) )
   
   return( rmse )
@@ -324,20 +327,44 @@ data_conform <- function( df_source, df_target ) {
   return( m )
 }
 
+dump_results <- function( fileName, pid, predictions ) {
+  results = cbind( pid, exp( predictions ) )
+  colnames( results ) <- c( "PID", "Sale_Price" ) 
+  write.csv( results, fileName, row.names=FALSE )
+}
+
+#=============================================
+# add_split()
+#
+# returns: (scalar) elapsed time plus difference between end_time and start_time
+#=============================================
+add_split <- function( t, start_time, end_time ) {
+  duration = t + ( end_time - start_time )[3]  # []: 1=user 2=system 3=elapsed
+  return( duration )
+}
+
 #=============================================
 # train/test
 #=============================================
 n = 10
+cv_alpha = 0.5
+scores = matrix( 0, nrow=10, ncol=4 )
+resultsTree = NULL
+resultsLinear = NULL
 
 for ( i in 1:n ) {
   
   #-----------------------------
   # Train
   #-----------------------------
-  #i = 1
-
+  prep_time   = 0
+  tree_time   = 0
+  linear_time = 0
+  
   # create test / train split files to simulate grading setup
   create_data_split( data, testIDs, i )
+  
+  start_time = proc.time()  
   
   # read train data
   train <- read.csv( "train.csv" )
@@ -353,33 +380,44 @@ for ( i in 1:n ) {
   # fix errors, apply winsor, ...
   train.x = data_transform( train.x, qValues, varNamesWinsor )
   
-  # convert to one-hot encoding
+  # convert categorical variables to one-hot encoding
   train.matrix = to_one_hot( train.x )
   
-  # center, standardize
+  # remove the col mean, standardize
   Xmean        = colMeans( train.matrix )
   train.matrix = t( t(train.matrix) - Xmean )
   
+  prep_time = add_split( prep_time, start_time, proc.time() )  
+  
   # set seed for reproducibility
   set.seed( 12345 )
+
+  # fit the linear regression model
+  linear_start = proc.time()
+  cv.out <- cv.glmnet( as.matrix( train.matrix ), train.y, alpha = cv_alpha )
+  linear_time = add_split( linear_time, linear_start, proc.time() )
   
-  # fit the model
-  xgb.model <- xgboost( 
-    data      = as.matrix( train.matrix ), 
-    label     = train.y, 
+  # fit the tree model
+  tree_start = proc.time()
+  xgb.model <- xgboost(
+    data      = as.matrix( train.matrix ),
+    label     = train.y,
     max_depth = 6,
-    eta       = 0.05, 
+    eta       = 0.05,
     nrounds   = 5000,
     subsample = 0.5,
     verbose   = FALSE
   )
+  tree_time = add_split( tree_time, tree_start, proc.time() )
   
   #-----------------------
   # Test
   #-----------------------
+  start_time = proc.time()
   
   # load test split
   test <- read.csv( "test.csv" )
+  pid = test[,"PID"]
   
   # remove variables
   test.x = remove_variables( test, varNamesDrop )
@@ -394,17 +432,41 @@ for ( i in 1:n ) {
   # conform test matrix to train matrix
   test.matrix = data_conform( train.matrix, test.matrix )
 
-  # create test design matrix
-  Xtest = data_transform( test.matrix, qValues, varNamesWinsor )
-  Xtest = t( t(Xtest) - Xmean )
+  # center (remove the 'train' mean)
+  test.matrix = t( t( test.matrix ) - Xmean )
+  
+  # standardize
+  prep_time = add_split( prep_time, start_time, proc.time() )
+  
+  # predict
+  linear_start = proc.time()
+  predLinear <- predict( cv.out, s = cv.out$lambda.min, newx = as.matrix( test.matrix ) )
+  linear_time = add_split( linear_time, linear_start, proc.time() )
+  
+  tree_start = proc.time()
+  predTree <- predict( xgb.model, as.matrix( test.matrix ) )
+  tree_time = add_split( tree_time, tree_start, proc.time() )
+  
+  # output predictions to file
+  dump_results( outFileNameLinear, pid, predLinear )
+  dump_results( outFileNameTree,   pid, predTree   )
   
   # evaluate results
-  rmse = get_rmse( outFileName )
+  rmseLinear = get_rmse( outFileNameLinear )
+  rmseTree   = get_rmse( outFileNameTree   )
   
-  if ( VERBOSE ) {
+  # record results
+  scores[i,1] = rmseLinear
+  scores[i,2] = linear_time + prep_time
+  scores[i,3] = rmseTree
+  scores[i,4] = tree_time + prep_time
+  
+#  if ( VERBOSE ) {
     score = NULL
-    score = paste( score, "RMSE[", j, "]: ", j, rmse )
+    score = paste( score, "split[", i, "]: ", scores[i,1], scores[i,2], scores[i,3], scores[i,4] )
     print( score )
-  }
+#  }
 }
+colnames( scores ) <- c( "RMSE linear", "Time linear", "RMSE Tree", "Time Tree" )
+write.csv( scores, "results.txt", row.names=FALSE )
 # done
