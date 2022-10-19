@@ -11,7 +11,8 @@ October 17, 2022
 James Garijo-Garde (jamesig2):
 - general code stub for training/testing
 - identification of variables to log/winsorize
-- Linear Regression model
+- Linear Regression model tuning
+- written report
 
 Matthew Lind (lind6):
 - data cleaning / processing functions
@@ -36,14 +37,26 @@ After the data was repaired, a copy was made for each training method employed s
 ### Dropped Variables
 Several variables demonstrated little or no correlation to Sale_Price of the home, so they were dropped from the model (e.g. Latitude, Longitude, PID, ...)
 
-### Ordered Categorical Variables
-Categorical variables utilizing levels as a rating system of increasing quality were converted to ordinal variables with integer values.
-
-### Unordered Nominal Variables
+### Nominal Variables
 Categorical variables utilizing levels of nominal values were converted to distinct binary variables (one-hot encoding) with each binary variable representing one nominal value in the original variable.  For each converted categorical variable, K-1 binary variables were generated where K is the number of levels in the variable when K > 2.
 
 ### Winsor Method
-Numeric variables demonstrating high correlation to Sale_Price, but contained extreme outliers, were processed using the winsor method to clamp outliers to a specified quantile - usually 95%.
+Numeric variables demonstrating high correlation to Sale_Price but containing extreme outliers were processed using the winsor method to clamp outliers to quantiles as specified below:
+|   |    |
+| --- | --- |
+| Mas_Vnr_Area | .99 |
+| First_Flr_SF | .99 |
+| Garage_Area | .95 |
+| Gr_Liv_Area | .99 |
+| Lot_Area | .95 |
+| Open_Porch_SF | .95 |
+| Total_Bsmt_SF | .90 |
+| Wood_Deck_SF | .99 |
+| Screen_Porch | .99 |
+We chose .99 as the quantile value for the majority of the columns since it was a more conservative pairing back of ourlying data, although we did choose to winsorize more agressively as needed.
+
+### Logarithmic Transformation
+We identified several variables with a relationship appearing logarithmic to Sale_Price, however, due to the strong performance of our models before adding the logarithmic transformations, we decided against transforming any data logarithmically. The columns we would have performed a logarithmic transformation on were: Bsmt_Qual, Garage_Area, Garage_Yr_Blt, Lot_Frontage, Open_Porch_SF, Overall_Qual, Total_Bsmt_SF, Year_Built, and Year_Remod_Add.
 
 
 ## __Description of models__:
@@ -52,7 +65,7 @@ Numeric variables demonstrating high correlation to Sale_Price, but contained ex
 
 ### Linear Regression: 
 
-Elastic Net is a linear regression method utilizing regularization of the L1 and L2 penalties as found in the Lasso and Ridge regression methods respectively.  Elastic net is ...
+Elastic Net is a linear regression method utilizing regularization of the L1 and L2 penalties as found in the Lasso and Ridge regression methods respectively.  Elastic net uses the alpha parameter to specify the ratio of L1 penalty to L2 penalty: an alpha value of 0 is equivalent to ridge regression, while an alpha value of 1 is equivalent to lasso. Alpha can also be a value between 0 and 1, in which case it represents the ratio of penalty applied to ridge vs. lasso (for example, an alpha of 0.5 bases its prediction half off of the ridge prediction and half off of the lasso predition. We selected the alpha value by manually binary searching through possible values with a presision of one number after the decimal point. A value of 0.5 was chosen via this method. After selecting an alpha value, we compared s values of lambda.min to lambda.1se and the default value of the entire sequence used to create the model in the predict function. lambda.min perfomred best.
 
 ### Tree based method: 
 
@@ -93,9 +106,8 @@ System specifications:
 
 
 Elastic Net Hyperparameters:
-- __parameter 1__: explanation 1 ...
-- __parameter 2__: explanation 2 ...
-- __parameter 3__: explanation 3 ... 
+- __alpha__: 0.5
+- __s__: lambda.min
 
 Benchmarks: 
 
