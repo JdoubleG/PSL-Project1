@@ -103,7 +103,7 @@ The XGBoost tree method was trained on the following system:
 
 The xgboost library has many hyperparameters which can be adjusted to improve results.  Only a small subset were actually used in training:
 - __eta__: Controls rate of learning and used to control overfitting.  Typical values specified in range [0...1].  Values tested were: 0.01, 0.025, 0.035, 0.1, 0.04, 0.05, 0.065, 0.5 and 1.0.  The best eta was roughly 0.05 - 0.065 depending on the rounds and depth parameters.
-- __rounds__: Maximum number of boosting iterations.  More rounds means more  decision trees are built for boosting, but also more computation resources and time involved.  Values tested were 100, 150, 175, 250, 500, 1000, 1500, 2500, 5000.  The default value was 5000, but lowered by half until a best compromise was reached.  Lower rounds improved execution time greatly but reduced accuracy of prediction.  Best value was approximatley 175.
+- __rounds__: Maximum number of boosting iterations.  More rounds means more  decision trees are built for boosting, but also more computation resources and time involved.  Values tested were 100, 150, 175, 250, 500, 1000, 1500, 2500, 5000.  The default value was 5000, but lowered by half until a best compromise was reached.  Lower rounds improved execution time greatly but reduced accuracy of prediction.  Lowest value satisfying benchmarks was 175.
 - __subsample__: Subsample ratio of the training distance.  Ratio of how many data instances are collected to grow trees to prevent overfitting.  Values tested were: 0.01, 0.1, 0.35, 0.5, 0.65, 0.75, and 1.0.  Best value was 0.5. as both higher and lower values resulting in individual splits exceeding the benchmark while extremely low subsample greatly increased RMSE.
 - __maxdepth__: Maximum depth of the tree.  Lower values resulted faster computation but poorer RMSE.  Higher values slowed execution time, but did not produce significantly better RMSE.  RMSE appeared to peak around value of 9.  Values tested were 1, 3, 6, 9, 12, and 50.  Best value was between 6 and 9.
 
@@ -114,16 +114,16 @@ __eta__= 0.05, __rounds__= 1000, __max depth__= 6, __subsample__= 0.5
 
 | Split | Time (s) | RMSE |
 | --- | --- | --- |
-| 1  | 18.390 | 0.116208689040852 |
-| 2  | 18.590 | 0.119561092066234 |
-| 3  | 18.159 | 0.1135738235704 |
-| 4  | 18.179 | 0.112813233033067 |
-| 5  | 18.329 | 0.110649984301112 |
-| 6  | 18.610 | 0.127159680916838 |
-| 7  | 18.340 | 0.127560377899479 |
-| 8  | 18.360 | 0.126715317877958 |
-| 9  | 18.440 | 0.127017253341482 |
-| 10 | 18.209 | 0.124610717964054 |
+| 1  | 18.429 | 0.115975659748044 |
+| 2  | 18.590 | 0.120204730438156 |
+| 3  | 18.219 | 0.112864671573723 |
+| 4  | 18.120 | 0.11422704651545 |
+| 5  | 18.560 | 0.110223450510811 |
+| 6  | 18.939 | 0.127159680916838 |
+| 7  | 18.380 | 0.129536942732046 |
+| 8  | 18.359 | 0.127812048776704 |
+| 9  | 18.510 | 0.128504951720723 |
+| 10 | 18.350 | 0.123814368393756 |
 
 ## __Comments__
 
