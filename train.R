@@ -10,6 +10,7 @@
 # Date: October 17, 2022
 #================================================================
 library( xgboost )
+library( glmnet )
 
 VERBOSE           = FALSE
 outFileNameLinear = "mysubmission1.txt"
@@ -22,25 +23,40 @@ data    <- read.csv(   "Ames_data.csv"        )
 testIDs <- read.table( "project1_testIDs.dat" )
 
 qValues = c(
+  0.99,
+  0.99,
+  0.95,
+  0.99,
   0.95,
   0.95,
-  0.95,
-  0.95,
-  0.95,
-  0.95,
-  0.95,
-  0.95
+  0.90,
+  0.99,
+  0.99
 )
 
 varNamesWinsor = c(
+  "Mas_Vnr_Area",
   "First_Flr_SF",
   "Garage_Area",
   "Gr_Liv_Area",
   "Lot_Area",
-  "Lot_Frontage",
   "Open_Porch_SF",
   "Total_Bsmt_SF",
-  "Wood_Deck_SF"
+  "Wood_Deck_SF",
+  "Screen_Porch"
+)
+
+varNamesLog = c(
+  # "Bsmt_Qual",
+  "Garage_Area",
+  # "Garage_Qual",
+  "Garage_Yr_Blt",
+  "Lot_Frontage",
+  "Open_Porch_SF",
+  # "Overall_Qual",
+  "Total_Bsmt_SF",
+  "Year_Built",
+  "Year_Remod_Add"
 )
 
 varNamesOneHot = c(
@@ -258,19 +274,42 @@ apply_winsor <- function( data, qValues, varNames ) {
 }
 
 #===================================================
+# apply_log() - applies a logarithmic transformation to specified variables.
+#
+#     data: data frame to modify
+# varNames: vector of variables (columns) to process in the data frame
+#
+# returns: (data frame) copy of input data frame with logarithm applied
+#===================================================
+apply_log <- function( data, varNames ) {
+  df = data
+  for ( varName in varNames ) {
+    col <- df[, varName]
+    col[is.na(col)] <- 0
+    col[!is.finite(col)] <- 0
+    df[, varName] <- log(col)
+  }
+  print(df)
+  return( df )
+}
+
+#===================================================
 # data_transform() - apply transformations to the data in the input data frame.
 #
 # df: input data frame
 #
 # returns: (data frame) copy of input data frame
 #===================================================
-data_transform <- function( df, qValues, varNamesWinsor ) {
+data_transform <- function( df, qValues, varNamesLog, varNamesWinsor ) {
   
   # replace missing values
   df[,"Garage_Yr_Blt"][ is.na( df[,"Garage_Yr_Blt"] ) ] = 0
   
   # fix erroneous values
 #  df$Garage_Yr_Blt[ df$Garage_Yr_Blt > 2022 ] = df$Year_Built
+  
+  # apply log
+  # df_log = apply_log(df, varNamesLog)
   
   # apply winsor to variables with significant outliers
   df_winsor = apply_winsor( df, qValues, varNamesWinsor )
@@ -377,8 +416,8 @@ for ( i in 1:n ) {
   train.x  = remove_variables( train, varNamesDrop )
   colNames = colnames( train.x )
   
-  # fix errors, apply winsor, ...
-  train.x = data_transform( train.x, qValues, varNamesWinsor )
+  # fix errors, apply log, ...
+  train.x = data_transform( train.x, qValues, varNamesLog, varNamesWinsor )
   
   # convert categorical variables to one-hot encoding
   train.matrix = to_one_hot( train.x )
@@ -394,7 +433,7 @@ for ( i in 1:n ) {
 
   # fit the linear regression model
   linear_start = proc.time()
-  cv.out <- cv.glmnet( as.matrix( train.matrix ), train.y, alpha = cv_alpha )
+  cv.out <- cv.glmnet( as.matrix( train.matrix ), train.y, alpha = 0.5 )
   linear_time = add_split( linear_time, linear_start, proc.time() )
   
   # fit the tree model
@@ -423,7 +462,7 @@ for ( i in 1:n ) {
   test.x = remove_variables( test, varNamesDrop )
   
   # fix errors
-  test.x = data_transform( test.x, qValues, varNamesWinsor )
+  test.x = data_transform( test.x, qValues, varNamesLog, varNamesWinsor )
   
   # convert to one-hot encoding
   test.matrix = to_one_hot( test.x )
