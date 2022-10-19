@@ -65,7 +65,7 @@ We identified several variables with a relationship appearing logarithmic to Sal
 
 ### Linear Regression: 
 
-Elastic Net is a linear regression method utilizing regularization of the L1 and L2 penalties as found in the Lasso and Ridge regression methods respectively.  Elastic net uses the alpha parameter to specify the ratio of L1 penalty to L2 penalty: an alpha value of 0 is equivalent to ridge regression, while an alpha value of 1 is equivalent to lasso. Alpha can also be a value between 0 and 1, in which case it represents the ratio of penalty applied to ridge vs. lasso (for example, an alpha of 0.5 bases its prediction half off of the ridge prediction and half off of the lasso predition. We selected the alpha value by manually binary searching through possible values with a presision of one number after the decimal point. A value of 0.5 was chosen via this method. After selecting an alpha value, we compared s values of lambda.min to lambda.1se and the default value of the entire sequence used to create the model in the predict function. lambda.min perfomred best.
+Elastic Net is a linear regression method utilizing regularization of the L1 and L2 penalties as found in the Lasso and Ridge regression methods respectively.
 
 ### Tree based method: 
 
@@ -91,6 +91,9 @@ Training was conducted over 10 splits with each split tested over different subs
 
 ### __Linear Regression - Elastic Net__:
 
+Elastic net uses the alpha parameter to specify the ratio of L1 penalty to L2 penalty: an alpha value of 0 is equivalent to ridge regression, while an alpha value of 1 is equivalent to lasso. Alpha can also be a value between 0 and 1, in which case it represents the ratio of penalty applied to ridge vs. lasso (for example, an alpha of 0.5 bases its prediction half off of the ridge prediction and half off of the lasso predition. We selected the alpha value by manually binary searching through possible values with a presision of one number after the decimal point. A value of 0.5 was chosen via this method.
+
+After selecting an alpha value, we compared s values of lambda.min to lambda.1se and the default value of the entire sequence used to create the model in the predict function. lambda.min performed best.
 
 System specifications:
 
@@ -113,16 +116,16 @@ Benchmarks:
 
 | Split | Time | RMSE |
 | --- | --- | --- |
-| 1  | 00:01 | 0.123 |
-| 2  | 00:01 | 0.123 |
-| 3  | 00:01 | 0.123 |
-| 4  | 00:01 | 0.123 |
-| 5  | 00:01 | 0.123 |
-| 6  | 00:01 | 0.123 |
-| 7  | 00:01 | 0.123 |
-| 8  | 00:01 | 0.123 |
-| 9  | 00:01 | 0.123 |
-| 10 | 00:01 | 0.123 |
+| 1  | 1.19999999995343 | 0.124628384771047 |
+| 2  | 1.07000000000698 | 0.118403236441471 |
+| 3  | 1.36000000004424 | 0.123265305612458 |
+| 4  | 1.18000000005122 | 0.122803429417362 |
+| 5  | 1.04999999998836 | 0.111930337886272 |
+| 6  | 1.34999999997672 | 0.134311146078248 |
+| 7  | 1.39000000001397 | 0.126345650528322 |
+| 8  | 1.59000000002561 | 0.121589583453122 |
+| 9  | 1.26000000000931 | 0.132570227078566 |
+| 10 | 1.05999999999767 | 0.124052457975485 |
 
 ### __Boosting Tree using XGBoost__:
 
@@ -164,6 +167,8 @@ The training was conducted over 10 splits with the following observed running ti
 ### __Results / Conclusion __:
 
 (__TO DO__: Discussion of findings, what worked, what didn't, interesting discoveries along the way (good or bad), etc...)
+
+
 
 ### Remarks:
 
