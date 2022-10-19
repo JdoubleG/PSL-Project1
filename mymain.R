@@ -17,25 +17,27 @@ outFileNameTree   = "mysubmission2.txt"
 # read data from file
 #--------------------------
 qValues = c(
+  0.99,
+  0.99,
+  0.95,
+  0.99,
   0.95,
   0.95,
-  0.95,
-  0.95,
-  0.95,
-  0.95,
-  0.95,
-  0.95
+  0.90,
+  0.99,
+  0.99
 )
 
 varNamesWinsor = c(
+  "Mas_Vnr_Area",
   "First_Flr_SF",
   "Garage_Area",
   "Gr_Liv_Area",
   "Lot_Area",
-  "Lot_Frontage",
   "Open_Porch_SF",
   "Total_Bsmt_SF",
-  "Wood_Deck_SF"
+  "Wood_Deck_SF",
+  "Screen_Porch"
 )
 
 varNamesDrop = c( 
