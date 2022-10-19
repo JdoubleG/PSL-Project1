@@ -268,7 +268,7 @@ resultsLinear = NULL
     label     = train.y,
     max_depth = 6,
     eta       = 0.05,
-    nrounds   = 5000,
+    nrounds   = 1000,
     subsample = 0.5,
     verbose   = FALSE
   )
