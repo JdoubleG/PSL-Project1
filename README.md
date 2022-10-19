@@ -52,10 +52,6 @@ Training was conducted over 10 splits with each split tested over different subs
 
 ### __Linear Regression - Elastic Net__:
 
-Elastic net uses the alpha parameter to specify the ratio of L1 penalty to L2 penalty: an alpha value of 0 is equivalent to ridge regression, while an alpha value of 1 is equivalent to lasso. We selected the alpha value by manually binary searching through possible values with a precision of one number after the decimal point. A value of 0.5 was chosen via this method.
-
-After selecting an alpha value, we compared s values of lambda.min to lambda.1se and the default value of the entire sequence used to create the model in the predict function. lambda.min performed best.
-
 System specifications:
 
 |   |    |
@@ -69,23 +65,23 @@ System specifications:
 | R Version | 4.2.1 |
 
 Elastic Net Hyperparameters:
-- __alpha__: 0.5
-- __s__: lambda.min
+- __alpha__: Elastic net uses the alpha parameter to specify the ratio of L1 penalty to L2 penalty: an alpha value of 0 is equivalent to ridge regression, while an alpha value of 1 is equivalent to lasso. We selected the alpha value by manually binary searching through possible values with a precision of one number after the decimal point. A value of 0.5 was chosen via this method.
+- __s__: We compared s values of lambda.min to lambda.1se and the default value of the entire sequence used to create the model in the predict function. lambda.min performed best.
 
 Benchmarks: 
 
 | Split | Time | RMSE |
 | --- | --- | --- |
-| 1  | 1.19999999995343 | 0.124628384771047 |
-| 2  | 1.07000000000698 | 0.118403236441471 |
-| 3  | 1.36000000004424 | 0.123265305612458 |
-| 4  | 1.18000000005122 | 0.122803429417362 |
-| 5  | 1.04999999998836 | 0.111930337886272 |
-| 6  | 1.34999999997672 | 0.134311146078248 |
-| 7  | 1.39000000001397 | 0.126345650528322 |
-| 8  | 1.59000000002561 | 0.121589583453122 |
-| 9  | 1.26000000000931 | 0.132570227078566 |
-| 10 | 1.05999999999767 | 0.124052457975485 |
+| 1  | 1.13 | 0.122549188897726 |
+| 2  | 1.04 | 0.118001606852055|
+| 3  | 1.17 | 0.123160415808686 |
+| 4  | 1.06 | 0.120522392137575 |
+| 5  | 1.05 | 0.112284121134187 |
+| 6  | 1.11 | 0.132558750522837 |
+| 7  | 1.84 | 0.126684093803842 |
+| 8  | 1.14 | 0.122010449983017 |
+| 9  | 1.05 | 0.130120242657457 |
+| 10 | 1.04 | 0.123882473073327 |
 
 ### __Boosting Tree using XGBoost__:
 
