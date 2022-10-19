@@ -64,7 +64,7 @@ We identified several variables with a relationship appearing logarithmic to Sal
 
 ### Linear Regression: 
 
-Elastic Net is a linear regression method utilizing regularization of the L1 and L2 penalties as found in the Lasso and Ridge regression methods respectively.  Elastic net uses the alpha parameter to specify the ratio of L1 penalty to L2 penalty: an alpha value of 0 is equivalent to ridge regression, while an alpha value of 1 is equivalent to lasso. Alpha can also be a value between 0 and 1, in which case it represents the ratio of penalty applied to ridge vs. lasso (for example, an alpha of 0.5 bases its prediction half off of the ridge prediction and half off of the lasso predition. We selected the alpha value by manually binary searching through possible values with a presision of one number after the decimal point. After selecting an alpha value, we compared lambda.min to lambda.1se.
+Elastic Net is a linear regression method utilizing regularization of the L1 and L2 penalties as found in the Lasso and Ridge regression methods respectively.  Elastic net uses the alpha parameter to specify the ratio of L1 penalty to L2 penalty: an alpha value of 0 is equivalent to ridge regression, while an alpha value of 1 is equivalent to lasso. Alpha can also be a value between 0 and 1, in which case it represents the ratio of penalty applied to ridge vs. lasso (for example, an alpha of 0.5 bases its prediction half off of the ridge prediction and half off of the lasso predition. We selected the alpha value by manually binary searching through possible values with a presision of one number after the decimal point. A value of 0.5 was chosen via this method. After selecting an alpha value, we compared s values of lambda.min to lambda.1se and the default value of the entire sequence used to create the model in the predict function. lambda.min perfomred best.
 
 ### Tree based method: 
 
@@ -105,9 +105,8 @@ System specifications:
 
 
 Elastic Net Hyperparameters:
-- __parameter 1__: explanation 1 ...
-- __parameter 2__: explanation 2 ...
-- __parameter 3__: explanation 3 ... 
+- __alpha__: 0.5
+- __s__: lambda.min
 
 Benchmarks: 
 
